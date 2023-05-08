@@ -2,9 +2,10 @@
 
 import datajoint as dj
 import inspect
-import importlib
+import importlib 
+from adamacs.pipeline import scan #TR23: there is probably a better method to import scan - but this works
 
-schema = dj.schema()
+schema = dj.schema() 
 
 _linking_module = None
 
@@ -90,6 +91,7 @@ class EventType(dj.Lookup):
 class BehaviorRecording(dj.Manual):
     definition = """
     -> Session
+    -> scan.Scan 
     ---
     recording_start_time=null : datetime
     recording_duration=null   : float
