@@ -3,7 +3,7 @@
 import datajoint as dj
 import inspect
 import importlib 
-from adamacs.pipeline import scan #TR23: there is probably a better method to import scan - but this works
+from element_calcium_imaging import scan #TR23: there is probably a better method to import scan - but this works
 
 schema = dj.schema() 
 
