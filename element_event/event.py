@@ -110,9 +110,9 @@ class Event(dj.Imported):
     definition = """
     -> BehaviorRecording
     -> EventType
-    event_start_time          : float  # (second) relative to recording start
+    event_start_time          : decimal(11,5)  # (second) relative to recording start
     ---
-    event_end_time=null       : float  # (second) relative to recording start
+    event_end_time=null       : decimal(11,5)  # (second) relative to recording start
     """
 
 
