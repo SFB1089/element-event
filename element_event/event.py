@@ -81,9 +81,9 @@ def get_session_directory(session_key: dict) -> str:
 @schema
 class EventType(dj.Lookup):
     definition = """
-    event_type                : varchar(16)
+    event_type                : varchar(300)
     ---
-    event_type_description='' : varchar(256)
+    event_type_description='' : varchar(300)
     """
 
 
@@ -143,3 +143,39 @@ class AlignmentEvent(dj.Manual):
     end_time_shift: float                            # (s) WRT end_event_type
     """
     # WRT - with respect to
+    
+    
+@schema
+class InterpolationType(dj.Lookup):
+    """Types of interpolation/correction applied to event timestamps"""
+    definition = """
+    interpolation_type          : varchar(32)
+    ---
+    interpolation_description='' : varchar(256)
+    """
+    contents = [
+        ('LEADING_ZERO', 'Leading NaN/zero frames replaced with 0'),
+        ('DUPLICATE_SEQ', 'Repeated sequence detected and zeroed'),
+        ('PATTERN_446', '4,4,6 pattern corrected to 4,5,5'),
+        ('BAD_DIFF', 'Invalid diff corrected using predicted increment'),
+        ('INTERPOLATED', 'Zero frame filled via linear interpolation'),
+        ('EXTRAPOLATED_LEADING', 'Leading zero extrapolated backwards'),
+        ('EXTRAPOLATED_TRAILING', 'Trailing zero extrapolated forwards'),
+        ('INTERPOLATED_SYNTHETIC', 'No valid frames - synthetic sequence generated'),
+    ]
+
+
+@schema
+class EventInterpolation(dj.Manual):
+    """Log of interpolated/corrected events linked to their source Event"""
+    definition = """
+    -> Event
+    frame_idx                   : int           # eye camera frame index
+    ---
+    -> InterpolationType
+    original_value              : int           # original frame index before correction
+    corrected_value             : int           # corrected frame index after interpolation
+    diff_before=null            : int           # diff to previous frame before correction
+    diff_after=null             : int           # diff to previous frame after correction  
+    details=''                  : varchar(256)  # additional correction details
+    """
