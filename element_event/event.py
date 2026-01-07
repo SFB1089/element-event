@@ -179,3 +179,36 @@ class EventInterpolation(dj.Manual):
     diff_after=null             : int           # diff to previous frame after correction  
     details=''                  : varchar(256)  # additional correction details
     """
+
+
+@schema
+class CameraTimestamps(dj.Manual):
+    """
+    Raw camera timestamp data for sanity checking and fallback.
+    
+    Stores uncorrected data from two independent sources:
+    1. raw_ocr_frame_indices: Raw OptiTrack frame numbers extracted via OCR 
+       from eye camera video overlay (before any correction/interpolation)
+    2. csv_timestamps: High-precision timestamps from Bonsai-RX CSV files
+       (ISO 8601 format with sub-millisecond precision)
+    
+    This table provides a final sanity check and fallback mechanism by 
+    preserving the original, uncorrected data from both independent 
+    timestamp sources. Each array entry corresponds to one eye camera frame.
+    """
+    definition = """
+    -> BehaviorRecording
+    -> EventType                                    # e.g., 'mini2p1_eye_left_frames' or 'mini2p1_eye_right_frames'
+    ---
+    raw_ocr_frame_indices       : longblob          # Raw OCR-extracted OptiTrack frame numbers (no correction)
+    csv_timestamps              : longblob          # Bonsai-RX timestamps from CSV (seconds, float64)
+    csv_timestamps_iso          : longblob          # Original ISO 8601 timestamp strings from CSV
+    csv_start_datetime          : datetime(6)       # First CSV timestamp as datetime (for reference)
+    n_frames                    : int unsigned      # Total number of eye camera frames
+    n_valid_ocr                 : int unsigned      # Number of frames with valid OCR readings
+    n_csv_timestamps            : int unsigned      # Number of CSV timestamp entries
+    frame_rate_csv_hz           : float             # Estimated frame rate from CSV intervals (Hz)
+    csv_duration_sec            : float             # Total duration from CSV timestamps (seconds)
+    notes=''                    : varchar(1024)     # Processing notes or warnings
+    """
+
