@@ -104,6 +104,26 @@ class BehaviorRecording(dj.Manual):
         filepath              : varchar(300)
         """
 
+@schema
+class BpodRecording(dj.Manual):
+    definition = """
+    -> BehaviorRecording
+    ---
+    bpod_recording_start_time=null : datetime
+    bpod_recording_duration=null   : float
+    bpod_protocol_name=''          : varchar(256)
+    bpod_n_trials=null             : int
+    bpod_trial_types=null          : longblob
+    bpod_trial_type_names=null     : longblob
+    bpod_event_names=null          : longblob
+    bpod_state_names=null          : longblob
+    bpod_softcode_names=null       : longblob
+    bpod_info=null                 : longblob
+    bpod_metadata=null             : longblob
+    bpod_mat_filepath=null         : varchar(300)
+    bpod_protocol_filepath=null    : varchar(300)
+    """
+
 
 @schema
 class Event(dj.Imported):
@@ -163,6 +183,26 @@ class InterpolationType(dj.Lookup):
         ('EXTRAPOLATED_TRAILING', 'Trailing zero extrapolated forwards'),
         ('INTERPOLATED_SYNTHETIC', 'No valid frames - synthetic sequence generated'),
     ]
+
+@schema
+class BpodRecording(dj.Manual):
+    definition = """
+    -> BehaviorRecording
+    ---
+    bpod_recording_start_time=null : datetime
+    bpod_recording_duration=null   : float
+    bpod_protocol_name=''          : varchar(256)
+    bpod_n_trials=null             : int
+    bpod_trial_types=null          : longblob
+    bpod_trial_type_names=null     : longblob
+    bpod_event_names=null          : longblob
+    bpod_state_names=null          : longblob
+    bpod_softcode_names=null       : longblob
+    bpod_info=null                 : longblob
+    bpod_metadata=null             : longtext
+    bpod_mat_filepath=null         : varchar(300)
+    bpod_protocol_filepath=null    : varchar(300)
+    """
 
 
 @schema
